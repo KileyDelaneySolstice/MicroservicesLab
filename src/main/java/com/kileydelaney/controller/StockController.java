@@ -1,0 +1,117 @@
+package com.kileydelaney.controller;
+
+import com.kileydelaney.model.QueryResultObject;
+import com.kileydelaney.model.Stock;
+import com.kileydelaney.repository.StockRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/stocks")
+public class StockController {
+
+    private StockRepository stockRepository;
+    private QueryResultObject qro;
+    private String dataUrl = "https://bootcamp-training-files.cfapps.io/week4/week4_stocks.json";
+
+
+    public StockController(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
+    }
+
+    // load stocks
+    @GetMapping("/load")
+    public String saveStocks() throws Exception {
+        List<Stock> stocksList = Stock.jsonToList(dataUrl);
+        stockRepository.saveAll(stocksList);
+        stockRepository.updateDateOnlyField();
+        return "Stocks loaded successfully!";
+    }
+
+    // empty table
+    @GetMapping("/clear")
+    public String deleteStocks() {
+        stockRepository.deleteAll();
+        return "Stocks deleted successfully!";
+    }
+
+    // list stocks
+    @GetMapping("/list")
+    public Iterable<Stock> list() {
+        return stockRepository.findAll();
+    }
+
+    // retrieve highest price of a given stock on given date
+    @GetMapping("/high/{symbol}/{date}")
+    public String retrieveHighestPrice(@PathVariable String date, @PathVariable String symbol) {
+        qro = new QueryResultObject();
+        qro.setDate(date);
+        qro.setSymbol(symbol);
+        qro.setMaxPrice(stockRepository.getMaxPriceByDateAndSymbol(date, symbol));
+
+        return qro.maxToString();
+    }
+
+    // retrieve lowest price of a given stock on given date
+    @GetMapping("/low/{symbol}/{date}")
+    public String retrieveLowestPrice(@PathVariable String date, @PathVariable String symbol) {
+        qro = new QueryResultObject();
+        qro.setDate(date);
+        qro.setSymbol(symbol);
+        qro.setMinPrice(stockRepository.getMinPriceByDateAndSymbol(date, symbol));
+
+        return qro.minToString();
+    }
+
+    // retrieve total volume of a given stock traded on given date
+    @GetMapping("total/{symbol}/{date}")
+    public String retrieveTotalVolume(@PathVariable String date, @PathVariable String symbol) {
+        qro = new QueryResultObject();
+        qro.setDate(date);
+        qro.setSymbol(symbol);
+        qro.setTotalVol(stockRepository.getTotalVolumeByDateAndSymbol(date, symbol));
+
+        return qro.volToString();
+    }
+
+    // retrieve closing price of a given stock on a given date
+    @GetMapping("closing/{symbol}/{date}")
+    public String retrieveClosingPrice(@PathVariable String date, @PathVariable String symbol) {
+        qro = new QueryResultObject();
+        qro.setDate(date);
+        qro.setSymbol(symbol);
+        qro.setClosingPrice(stockRepository.getClosingPriceByDateAndSymbol(date, symbol));
+
+        return qro.closingToString();
+    }
+
+    // retrieve aggregated data summary
+    @GetMapping("datasummary/{symbol}/{date}")
+    public String retrieveAggregatedData(@PathVariable String date, @PathVariable String symbol) {
+        qro = new QueryResultObject();
+        qro.setDate(date);
+        qro.setSymbol(symbol);
+        qro.setMaxPrice(stockRepository.getMaxPriceByDateAndSymbol(date, symbol));
+        qro.setMinPrice(stockRepository.getMinPriceByDateAndSymbol(date, symbol));
+        qro.setTotalVol(stockRepository.getTotalVolumeByDateAndSymbol(date, symbol));
+        qro.setClosingPrice(stockRepository.getClosingPriceByDateAndSymbol(date, symbol));
+
+        return qro.toString();
+    }
+
+    // get a single stock (by id)
+    @GetMapping("/{id}")
+    public Optional<Stock> getStockById(@PathVariable(value = "id") Long stockId) {
+        if (stockRepository.existsById(stockId)) {
+            return stockRepository.findById(stockId);
+        } else {
+            return null;
+        }
+    }
+
+}
