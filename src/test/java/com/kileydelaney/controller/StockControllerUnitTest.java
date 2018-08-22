@@ -16,11 +16,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(StockController.class)
+@SpringBootTest
 public class StockControllerUnitTest{
 
     @InjectMocks
@@ -40,6 +41,7 @@ public class StockControllerUnitTest{
         Stock mockStock = new Stock();
         mockStock.setSymbol(2);
         mockStock.setVolume(200);
+        mockStock.setPrice(19.99);
 
         when(stockController.add(any(Stock.class)))
                 .thenReturn(mockStock);
@@ -50,8 +52,9 @@ public class StockControllerUnitTest{
 
         Stock retStock = stockController.add(aStock);
 
-        assertThat(retStock.getSymbol(), is(equalTo(5)));
-        assertThat(retStock.getPrice(), is(equalTo(20.99)));
+        assertThat(retStock.getSymbol(), is(equalTo(2)));
+        assertThat(retStock.getVolume(), is(equalTo(200)));
+        assertThat(retStock.getPrice(), is(equalTo(19.99)));
 
     }
 
