@@ -14,7 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -44,11 +46,12 @@ public class StockRepositoryIntegrationTest {
         }
 
         // assertion
-        assertThat(foundStock.getId(), is(equalTo(101L)));
+                                               assertThat(foundStock.getId(), is(equalTo(101L)));
 
     }
 
-    @Test public void testFindBySymbol() {
+    @Test
+    public void testFindBySymbol() {
 
         Stock aStock = new Stock();
         aStock.setSymbol(2);
@@ -61,7 +64,8 @@ public class StockRepositoryIntegrationTest {
         }
     }
 
-    @Test public void testFindByDate() {
+    @Test
+    public void testFindByDate() {
 
         Stock aStock = new Stock();
         aStock.setSymbol(2);
@@ -76,7 +80,8 @@ public class StockRepositoryIntegrationTest {
 
     }
 
-    @Test public void testFindByDateOnly() {
+    @Test
+    public void testFindByDateOnly() {
 
         Stock aStock = new Stock();
         aStock.setSymbol(5);
@@ -88,6 +93,32 @@ public class StockRepositoryIntegrationTest {
         for (Stock s: foundStocks) {
             assertThat(s.getDateOnly(), is(equalTo(testDate)));
         }
+    }
+
+    @Test
+    public void testSymbolDictionary() {
+
+        Stock aStock = new Stock();
+        Map<Integer, String> symbolDict = aStock.getSymbolsDict();
+
+        assert(symbolDict.containsKey(3));
+        assert(symbolDict.containsKey(1));
+        assert(symbolDict.containsKey(4));
+        assert(symbolDict.containsKey(5));
+        assert(symbolDict.containsKey(2));
+
+        assert(symbolDict.containsValue("PVTL"));
+        assert(symbolDict.containsValue("MSFT"));
+        assert(symbolDict.containsValue("AMZN"));
+        assert(symbolDict.containsValue("GOOG"));
+        assert(symbolDict.containsValue("AAPL"));
+
+        assertThat(symbolDict.get(1), is(equalTo("AAPL")));
+        assertThat(symbolDict.get(2), is(equalTo("GOOG")));
+        assertThat(symbolDict.get(3), is(equalTo("MSFT")));
+        assertThat(symbolDict.get(4), is(equalTo("PVTL")));
+        assertThat(symbolDict.get(5), is(equalTo("AMZN")));
+
     }
 
 }
