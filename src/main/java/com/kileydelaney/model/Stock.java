@@ -14,7 +14,9 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "stocks")
@@ -85,15 +87,12 @@ public class Stock {
 
 
     public String toString() {
-        return "Stock [ symbol: " + symbol + ", price: $" + price + ", volume: " + volume + ", timestamp: " + date + " ]";
+        return "Stock [ symbol: " + getSymbolsDict().get(symbol) + ", price: $" + price + ", volume: " + volume + ", timestamp: " + date + " ]";
     }
 
 
     /**
      * Helper method to parse JSON data from URL
-     *
-     * @return
-     * @throws IOException
      */
     public static List<Stock> jsonToList(String url) throws Exception {
 
@@ -106,6 +105,21 @@ public class Stock {
         Stock[] stockList = mapper.readValue(new URL(url), Stock[].class);
 
         return Arrays.asList(stockList);
+    }
+
+
+    /**
+     * Helper method to build and return dictionary for looking up symbol values
+     */
+    public static Map<Integer, String> getSymbolsDict() {
+        HashMap<Integer, String> symbolsDict = new HashMap<>();
+        symbolsDict.put(1, "AAPL");
+        symbolsDict.put(2, "GOOG");
+        symbolsDict.put(3, "MSFT");
+        symbolsDict.put(4, "PVTL");
+        symbolsDict.put(5, "AMZN");
+
+        return symbolsDict;
     }
 
 }
