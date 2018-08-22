@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -16,7 +18,7 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
     // populates date_only field
     @Transactional
     @Modifying
-    @Query(value = "UPDATE stocks SET date_only = cast(timestamp as date)", nativeQuery = true)
+    @Query(value = "UPDATE stocks SET date_only = cast(date as date)", nativeQuery = true)
     void updateDateOnlyField();
 
 
@@ -32,14 +34,15 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
 
 
     // additional queries for lab 2
-    @Query(value = "SELECT price FROM stocks WHERE timestamp = (SELECT MAX(timestamp) FROM stocks WHERE date_only = :date_only) AND symbol = :symbol LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT price FROM stocks WHERE date = (SELECT MAX(date) FROM stocks WHERE date_only = :date_only) AND symbol = :symbol LIMIT 1", nativeQuery = true)
     double getClosingPriceByDateAndSymbol(@Param("date_only") String date_only, @Param("symbol") String symbol);
 
 
+    // methods for calls in repo integration tests\
+    public List<Stock> findBySymbol(int symbol);
 
-    // methods for calls in repo integration tests
-    public Stock findById();
+    public List<Stock> findByDate(Timestamp date);
 
-    public List<Stock> findBySymbol();
+    public List<Stock> findByDateOnly(Date dateOnly);
 
 }

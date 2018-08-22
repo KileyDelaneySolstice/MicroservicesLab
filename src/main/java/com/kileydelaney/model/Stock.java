@@ -4,16 +4,15 @@ package com.kileydelaney.model;
  */
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.persistence.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,24 +25,19 @@ public class Stock {
     @Column(unique = true)
     private Long id;
 
-    @Column(nullable = false)
-    private String symbol;
+    private int symbol;
 
-    @Column(nullable = false)
     private double price;
 
-    @Column(nullable = false)
     private int volume;
 
-    @Column(nullable = false)
-    private Timestamp timestamp;
+    private Timestamp date;
 
     @Column(name = "date_only")
-    private Date date_only;
+    private Date dateOnly = new Date(0,0,0);
 
 
-    public Stock() {
-    }
+    public Stock() {}
 
     public Long getId() {
         return id;
@@ -53,11 +47,11 @@ public class Stock {
         this.id = id;
     }
 
-    public String getSymbol() {
+    public int getSymbol() {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
+    public void setSymbol(int symbol) {
         this.symbol = symbol;
     }
 
@@ -78,16 +72,20 @@ public class Stock {
     }
 
     public Timestamp getDate() {
-        return timestamp;
+        return date;
     }
 
     public void setDate(Timestamp date) {
-        this.timestamp = date;
+        this.date = date;
     }
+
+    public Date getDateOnly() { return dateOnly; }
+
+    public void setDateOnly(Date dateOnly) { this.dateOnly = dateOnly; }
 
 
     public String toString() {
-        return "Stock [ symbol: " + symbol + ", price: $" + price + ", volume: " + volume + ", timestamp: " + timestamp + " ]";
+        return "Stock [ symbol: " + symbol + ", price: $" + price + ", volume: " + volume + ", timestamp: " + date + " ]";
     }
 
 
@@ -101,6 +99,9 @@ public class Stock {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSSZ");
+
+        mapper.setDateFormat(dateFormat);
 
         Stock[] stockList = mapper.readValue(new URL(url), Stock[].class);
 
