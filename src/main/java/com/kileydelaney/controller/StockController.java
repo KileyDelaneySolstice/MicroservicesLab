@@ -3,10 +3,7 @@ package com.kileydelaney.controller;
 import com.kileydelaney.model.QueryResultObject;
 import com.kileydelaney.model.Stock;
 import com.kileydelaney.repository.StockRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +28,12 @@ public class StockController {
         stockRepository.saveAll(stocksList);
         stockRepository.updateDateOnlyField();
         return "Stocks loaded successfully!";
+    }
+
+    // add new stock
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public Stock add(@RequestBody Stock stock) {
+        return stockRepository.save(stock);
     }
 
     // empty table
