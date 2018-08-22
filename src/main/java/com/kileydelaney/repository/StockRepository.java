@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface StockRepository extends CrudRepository<Stock, Long> {
@@ -33,5 +34,12 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
     // additional queries for lab 2
     @Query(value = "SELECT price FROM stocks WHERE timestamp = (SELECT MAX(timestamp) FROM stocks WHERE date_only = :date_only) AND symbol = :symbol LIMIT 1", nativeQuery = true)
     double getClosingPriceByDateAndSymbol(@Param("date_only") String date_only, @Param("symbol") String symbol);
+
+
+
+    // methods for calls in repo integration tests
+    public Stock findById();
+
+    public List<Stock> findBySymbol();
 
 }
