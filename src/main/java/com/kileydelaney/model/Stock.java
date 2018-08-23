@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -40,6 +39,16 @@ public class Stock {
 
 
     public Stock() {}
+
+    public Stock(int symbol, double price, int volume, Timestamp date) {
+
+        this.symbol = symbol;
+        this.price = price;
+        this.volume = volume;
+        this.date = date;
+        this.dateOnly = new Date(date.getTime());
+
+    }
 
     public Long getId() {
         return id;
