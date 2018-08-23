@@ -14,11 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -27,28 +24,6 @@ public class StockRepositoryIntegrationTest {
     @Autowired
     private StockRepository stockRepository;
 
-
-    @Test
-    public void testFindById() {
-
-        // set up data scenario
-        Stock aStock = new Stock();
-        aStock.setId(101L);
-        System.out.println(aStock);
-
-        // find an inserted record using repository class
-        Optional<Stock> foundObj = stockRepository.findById(101L);
-        Stock foundStock;
-        if (foundObj.isPresent()) {
-            foundStock = foundObj.get();
-        } else {
-            foundStock = null;
-        }
-
-        // assertion
-                                               assertThat(foundStock.getId(), is(equalTo(101L)));
-
-    }
 
     @Test
     public void testFindBySymbol() {
