@@ -48,22 +48,4 @@ public class StockControllerIntegrationTest {
 
     }
 
-    @Test
-    public void addStock() {
-        Stock aStock = new Stock();
-        aStock.setId(101L);
-        aStock.setSymbol(2);
-        aStock.setPrice(19.99);
-        aStock.setVolume(200);
-        Timestamp testDate = new Timestamp(2018,8,22,2,29,56,33);
-        Date testDateOnly = new Date(2018,8,22);
-        aStock.setDate(testDate);
-        aStock.setDateOnly(testDateOnly);
-
-        Stock responseStock = stockController.add(aStock);
-
-        assertThat(responseStock, is(equalTo(aStock)));
-
-    }
-
 }

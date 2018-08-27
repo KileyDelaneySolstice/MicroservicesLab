@@ -5,6 +5,7 @@ import com.kileydelaney.model.Quote;
 import com.kileydelaney.repository.QuoteRepository;
 import com.sun.org.apache.xpath.internal.operations.Quo;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +28,7 @@ public class QuoteController {
     @GetMapping("/load")
     public String saveQuotes() throws Exception {
         List<Quote> stocksList = Quote.jsonToList(dataUrl);
+        // load dateOnly here?
         quoteRepository.saveAll(stocksList);
         return "Quotes loaded successfully!";
     }
@@ -44,5 +46,10 @@ public class QuoteController {
         return quoteRepository.findAll();
     }
 
+    // filter quotes by stock symbol
+    @GetMapping("/filter/{symbol}")
+    public Iterable<Quote> filterBySymbol(@PathVariable String symbol) {
+        return quoteRepository.findAllBySymbolName(symbol);
+    }
 
 }

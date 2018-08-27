@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Entity
-@Table(name = "stocks")
+@Table(name = "quotes")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Quote {
 
