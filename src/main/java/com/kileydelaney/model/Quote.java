@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.persistence.*;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -36,6 +37,9 @@ public class Quote {
 
     @JsonProperty("date")
     private Timestamp date;
+
+//    @Column(name = "dateOnly")
+//    private Date dateOnly;
 
 
     public Quote() {}
